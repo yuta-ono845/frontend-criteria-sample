@@ -1,0 +1,10 @@
+{
+  "name": "vue-ts-sample",
+  "private": true,
+  "dependencies": {
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
