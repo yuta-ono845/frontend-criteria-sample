@@ -3,6 +3,19 @@ import { useState } from "react";
 // どの画面を表示しているかを表す state 用の型。
 type Page = "home" | "detail";
 
+// BaseButton が受け取る props の型。
+type BaseButtonProps = {
+  label: string;
+  onClick: () => void;
+};
+
+// MessageCard が受け取る props の型。
+type MessageCardProps = {
+  title: string;
+  buttonLabel: string;
+  onClick: () => void;
+};
+
 // HomePage が親から受け取る props の型。
 type HomePageProps = {
   title: string;
@@ -15,26 +28,33 @@ type DetailPageProps = {
   onBack: () => void;
 };
 
-// 一覧画面の代わりになる最小ページ。
-// 親からタイトルと画面遷移用の関数を受け取る。
-function HomePage({ title, onMoveToDetail }: HomePageProps) {
+// Atomic Design の Atom にあたる最小部品。
+// 他のコンポーネントから再利用できるボタン。
+function BaseButton({ label, onClick }: BaseButtonProps) {
+  return <button onClick={onClick}>{label}</button>;
+}
+
+// Atomic Design の Molecule にあたる部品。
+// 見出しとボタンを組み合わせた小さな表示単位。
+function MessageCard({ title, buttonLabel, onClick }: MessageCardProps) {
   return (
     <section>
       <h1>{title}</h1>
-      <button onClick={onMoveToDetail}>詳細ページへ</button>
+      <BaseButton label={buttonLabel} onClick={onClick} />
     </section>
   );
 }
 
+// 一覧画面の代わりになる最小ページ。
+// Page にあたるコンポーネントで、Molecule を使って画面を作る。
+function HomePage({ title, onMoveToDetail }: HomePageProps) {
+  return <MessageCard title={title} buttonLabel="詳細ページへ" onClick={onMoveToDetail} />;
+}
+
 // 詳細画面の代わりになる最小ページ。
-// 親から表示文字列と戻る処理を受け取る。
+// こちらも Page にあたるコンポーネントで、同じ Molecule を再利用している。
 function DetailPage({ message, onBack }: DetailPageProps) {
-  return (
-    <section>
-      <h1>{message}</h1>
-      <button onClick={onBack}>ホームへ戻る</button>
-    </section>
-  );
+  return <MessageCard title={message} buttonLabel="ホームへ戻る" onClick={onBack} />;
 }
 
 // 親コンポーネント。
