@@ -1,32 +1,36 @@
 import { useState } from "react";
 
-// どの画面を表示しているかを表す state 用の型。
-type Page = "home" | "detail";
+// enum は「取りうる値の候補」を名前付きでまとめるための書き方。
+// 今回は画面状態を Home / Detail の2つに固定している。
+enum Page {
+  Home = "home",
+  Detail = "detail",
+}
 
-// BaseButton が受け取る props の型。
-type BaseButtonProps = {
+// interface は「オブジェクトの形」を決める書き方。
+interface BaseButtonProps {
   label: string;
   onClick: () => void;
-};
+}
 
 // MessageCard が受け取る props の型。
-type MessageCardProps = {
+interface MessageCardProps {
   title: string;
   buttonLabel: string;
   onClick: () => void;
-};
+}
 
 // HomePage が親から受け取る props の型。
-type HomePageProps = {
+interface HomePageProps {
   title: string;
   onMoveToDetail: () => void;
-};
+}
 
 // DetailPage が親から受け取る props の型。
-type DetailPageProps = {
+interface DetailPageProps {
   message: string;
   onBack: () => void;
-};
+}
 
 // Atomic Design の Atom にあたる最小部品。
 // 他のコンポーネントから再利用できるボタン。
@@ -61,21 +65,22 @@ function DetailPage({ message, onBack }: DetailPageProps) {
 // state を持ち、その値に応じて画面を切り替える。
 // ページ全体を再読み込みせずに表示だけ切り替えるので、最小SPAサンプルになっている。
 export default function App() {
-  const [page, setPage] = useState<Page>("home");
+  // useState<Page> の <Page> はジェネリクスで、「この state は Page 型」と指定している。
+  const [page, setPage] = useState<Page>(Page.Home);
   const [message] = useState<string>("詳細ページです");
 
   // page の値で表示する画面を分岐している。
-  if (page === "detail") {
+  if (page === Page.Detail) {
     return (
       <main>
-        <DetailPage message={message} onBack={() => setPage("home")} />
+        <DetailPage message={message} onBack={() => setPage(Page.Home)} />
       </main>
     );
   }
 
   return (
     <main>
-      <HomePage title="Hello SPA" onMoveToDetail={() => setPage("detail")} />
+      <HomePage title="Hello SPA" onMoveToDetail={() => setPage(Page.Detail)} />
     </main>
   );
 }

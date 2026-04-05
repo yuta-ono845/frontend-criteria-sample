@@ -1,9 +1,11 @@
-type Book = {
+// interface はデータオブジェクトの形を決めるために使える。
+interface Book {
   id: number;
   title: string;
   description: string;
-};
+}
 
+// Promise<Book> の <Book> はジェネリクスで、「最終的に Book 型が返る」という意味。
 async function getBook(id: number): Promise<Book> {
   const response = await fetch(`https://example.com/api/books/${id}`, {
     cache: "no-store",
